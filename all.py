@@ -145,6 +145,27 @@ y_np = y.numpy()
 plt.scatter(t_inps,t_targs)
 plt.scatter(t_inps,t_outs)
 
+model = torch.load('ann_best_model.pt')
+test_loss = 0.0
+model.eval()
+
+t_inps = []
+t_outs = []
+t_targs = []
+
+
+with torch.no_grad():
+    for idx,(o_inputs,o_targets) in enumerate(train_loader):
+        o_outputs = model(o_inputs)
+        o_loss = criterion(o_outputs,o_targets)
+        test_loss += o_loss.item()
+        t_inps = o_inputs
+        t_outs = o_outputs
+        t_targs = o_targets
+    
+    avg = test_loss/len(test_loader)
+    print(f"avg loss: {avg}")
+
 ## Classification
 
 import pandas as pd
